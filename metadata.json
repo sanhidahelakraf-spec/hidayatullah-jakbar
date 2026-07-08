@@ -1,0 +1,6 @@
+{
+  "name": "Hidayatullah Official Website",
+  "description": "Official website for Hidayatullah organization featuring news, program activities, and an admin content management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
