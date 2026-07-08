@@ -26,7 +26,7 @@ import {
   getCurrentSession,
 } from './lib/api';
 import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, DonationRecord } from './types';
-import { Calendar, Eye, MapPin, Mail, Phone, Lock, X, ChevronRight, ArrowUp, Heart } from 'lucide-react';
+import { Calendar, Eye, MapPin, Mail, Phone, X, ChevronRight, ArrowUp, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
@@ -255,27 +255,6 @@ export default function App() {
 
               {/* Activities photogallery */}
               <GallerySection galleryItems={gallery} />
-
-              {/* Administrative entry gateway for admin mode testing */}
-              {!isAdmin && (
-                <div className="mt-12 bg-white rounded-2xl p-6 border border-gray-150 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-red-50 text-red-600 rounded-full">
-                      <Lock className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-gray-800">Uji Coba Fitur Admin Website</h4>
-                      <p className="text-xs text-gray-500 font-medium">Masuk sebagai admin untuk CRUD berita, galeri foto, dan mengubah isi teks seluruh halaman menu.</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setShowAdminLogin(true)}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2 px-4 rounded-lg shadow-xs transition-colors cursor-pointer"
-                  >
-                    Masuk Sebagai Admin
-                  </button>
-                </div>
-              )}
             </motion.div>
           )}
 
