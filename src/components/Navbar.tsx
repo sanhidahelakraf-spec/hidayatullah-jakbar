@@ -104,10 +104,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="bg-emerald-950 text-emerald-300/90 text-[10px] md:text-[11px] py-2 px-4 md:px-8 border-b border-emerald-900/40 flex flex-col sm:flex-row justify-between items-center font-mono gap-1.5">
         <div className="flex items-center gap-4">
           <span className="hidden sm:inline">📍 Sekretariat DPD Jakbar: Jl. Kerapu 1 No.11, RT.08/RW.021, Pluit, Kecamatan Penjaringan, Jkt Utara, Daerah Khusus Ibukota Jakarta 14450</span>
-          <span>✉️ humas@hidayatullahjakbar.or.id</span>
         </div>
         <div className="flex items-center gap-3">
-          <span>DPD JAKARTA BARAT</span>
           <span className="text-amber-400 font-black">•</span>
         </div>
       </div>
