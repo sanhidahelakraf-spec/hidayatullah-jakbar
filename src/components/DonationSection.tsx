@@ -249,7 +249,7 @@ export const DonationSection: React.FC<DonationSectionProps> = ({
                       href={buildWhatsAppConfirmLink()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-emerald-650 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="w-5 h-5" /> Konfirmasi Bukti Transfer via WhatsApp
                     </a>

@@ -411,7 +411,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         <div className="text-xs text-slate-400 font-extrabold uppercase tracking-widest mt-3 md:mt-0 bg-slate-50 border border-slate-200 py-1.5 px-3 rounded-lg flex items-center gap-2">
-          <Activity className="w-4 h-4 text-emerald-500" /> Status: <span className="text-emerald-650">Online & Terhubung</span>
+          <Activity className="w-4 h-4 text-emerald-500" /> Status: <span className="text-emerald-600">Online & Terhubung</span>
         </div>
       </div>
 

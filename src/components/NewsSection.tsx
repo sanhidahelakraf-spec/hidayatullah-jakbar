@@ -24,7 +24,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
       <div className="lg:col-span-2">
         <div className="flex items-center justify-between border-b border-slate-200 pb-3.5 mb-6">
           <div className="flex items-center gap-2.5">
-            <span className="w-1.5 h-5 bg-emerald-650 block rounded-full" />
+            <span className="w-1.5 h-5 bg-emerald-600 block rounded-full" />
             <h3 className="text-sm md:text-base font-display font-black text-slate-800 tracking-wide uppercase">
               JAKARTA BARAT UPDATE
             </h3>
@@ -97,7 +97,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
             href="https://wa.me/6287755376499"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between bg-emerald-650 hover:bg-emerald-700 text-white p-4 rounded-xl transition-all shadow-md group/wa"
+            className="flex items-center justify-between bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-xl transition-all shadow-md group/wa"
           >
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2.5 rounded-full group-hover/wa:scale-110 transition-transform">

@@ -125,7 +125,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onAddMessage }) 
                 className="text-center py-12 space-y-4"
               >
                 <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-xs">
-                  <CheckCircle className="w-10 h-10 text-emerald-650" />
+                  <CheckCircle className="w-10 h-10 text-emerald-600" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-800">Pesan Anda Sukses Dikirim!</h3>
                 <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed font-medium">
