@@ -200,7 +200,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onAddMessage }) 
 
                 <button
                   type="submit"
-                  className="bg-emerald-750 hover:bg-emerald-850 text-white font-bold py-2.5 px-6 rounded-lg text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer ml-auto"
+                  className="bg-eemerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 px-6 rounded-lg text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer ml-auto"
                 >
                   <Send className="w-4 h-4" /> Kirim Pesan Sekarang
                 </button>

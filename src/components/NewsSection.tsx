@@ -31,7 +31,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
           </div>
           <button
             onClick={onViewAllNews}
-            className="bg-emerald-750 hover:bg-emerald-850 text-white text-[11px] font-bold px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
           >
             VIEW ALL
           </button>
@@ -62,7 +62,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                     <Calendar className="w-3 h-3 text-emerald-600" />
                     <span>{formatDate(article.date)}</span>
                   </div>
-                  <h4 className="font-bold text-sm text-slate-800 hover:text-emerald-750 transition-colors line-clamp-2 mb-2 leading-snug">
+                  <h4 className="font-bold text-sm text-slate-800 hover:text-emerald-700 transition-colors line-clamp-2 mb-2 leading-snug">
                     {article.title}
                   </h4>
                   <p className="text-xs text-slate-500 line-clamp-3 mb-3 leading-relaxed">
@@ -97,7 +97,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
             href="https://wa.me/6287755376499"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between bg-emerald-650 hover:bg-emerald-750 text-white p-4 rounded-xl transition-all shadow-md group/wa"
+            className="flex items-center justify-between bg-emerald-650 hover:bg-emerald-700 text-white p-4 rounded-xl transition-all shadow-md group/wa"
           >
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2.5 rounded-full group-hover/wa:scale-110 transition-transform">

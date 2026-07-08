@@ -575,7 +575,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
-                    <span className="absolute top-3 left-3 bg-emerald-850 text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
+                    <span className="absolute top-3 left-3 bg-emerald-800 text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
                       {item.category}
                     </span>
                   </div>

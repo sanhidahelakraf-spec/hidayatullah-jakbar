@@ -22,7 +22,7 @@ export const MainstreamGerakan: React.FC = () => {
       description: 'Mewujudkan kepedulian nyata bagi kaum yatim piatu, fakir miskin, dhuafa, serta tanggap bencana kemanusiaan. Kami meyakini dakwah harus menyentuh perut yang lapar dan mengobati tubuh yang sakit.',
       details: 'Program unggulan: Baitul Maal Hidayatullah (BMH), Relawan SAR Jabar, Beasiswa Penghafal Quran.',
       icon: <Heart className="w-8 h-8 text-white" />,
-      bg: 'from-emerald-600 to-emerald-850'
+      bg: 'from-emerald-600 to-emerald-800'
     },
     {
       title: 'Kemandirian Ekonomi Syariah',

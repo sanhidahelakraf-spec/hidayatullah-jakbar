@@ -107,7 +107,7 @@ export const DonationSection: React.FC<DonationSectionProps> = ({
                   className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-md transition-all flex flex-col group"
                 >
                   <div className="h-48 overflow-hidden relative">
-                    <span className="absolute top-3 left-3 bg-emerald-850/95 backdrop-blur-xs text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
+                    <span className="absolute top-3 left-3 bg-emerald-800/95 backdrop-blur-xs text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
                       {camp.category}
                     </span>
                     <img
@@ -249,7 +249,7 @@ export const DonationSection: React.FC<DonationSectionProps> = ({
                       href={buildWhatsAppConfirmLink()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-emerald-650 hover:bg-emerald-750 text-white font-bold py-3 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full bg-emerald-650 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="w-5 h-5" /> Konfirmasi Bukti Transfer via WhatsApp
                     </a>
@@ -369,7 +369,7 @@ export const DonationSection: React.FC<DonationSectionProps> = ({
                   {/* Submit Donasi */}
                   <button
                     type="submit"
-                    className="w-full bg-emerald-750 hover:bg-emerald-850 text-white font-bold py-2.5 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+                    className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-lg text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
                   >
                     Kirim Donasi (Konfirmasi Transfer)
                   </button>
