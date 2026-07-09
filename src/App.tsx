@@ -24,8 +24,10 @@ import {
   loginAdmin,
   logoutAdmin,
   getCurrentSession,
+  getJaringan,
+  getMainstreamPillars,
 } from './lib/api';
-import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, DonationRecord } from './types';
+import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, DonationRecord, JaringanBranch, MainstreamPillar } from './types';
 import { Calendar, Eye, MapPin, Mail, Phone, X, ChevronRight, ArrowUp, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -46,6 +48,8 @@ export default function App() {
   const [campaigns, setCampaigns] = useState<DonationCampaign[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [donationHistory, setDonationHistory] = useState<DonationRecord[]>([]);
+  const [jaringan, setJaringan] = useState<JaringanBranch[]>([]);
+  const [pillars, setPillars] = useState<MainstreamPillar[]>([]);
 
   // Admin authentication state (dicek dari Supabase session saat mount)
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -63,13 +67,15 @@ export default function App() {
     async function loadAllData() {
       try {
         setIsLoading(true);
-        const [newsData, galleryData, pagesData, campaignsData, messagesData, donationData] = await Promise.all([
+        const [newsData, galleryData, pagesData, campaignsData, messagesData, donationData, jaringanData, pillarsData] = await Promise.all([
           getNews(),
           getGallery(),
           getAllPages(),
           getDonationCampaigns(),
           getContactMessages().catch(() => []), // butuh login admin untuk baca, jadi boleh gagal untuk pengunjung biasa
           getDonationHistory(),
+          getJaringan(),
+          getMainstreamPillars(),
         ]);
         setNews(newsData);
         setGallery(galleryData);
@@ -77,6 +83,8 @@ export default function App() {
         setCampaigns(campaignsData);
         setMessages(messagesData);
         setDonationHistory(donationData);
+        setJaringan(jaringanData);
+        setPillars(pillarsData);
       } catch (err) {
         console.error(err);
         setLoadError('Gagal memuat data dari server. Cek koneksi internet atau konfigurasi Supabase.');
@@ -265,12 +273,12 @@ export default function App() {
 
           {/* 3. JARINGAN AREA VIEW */}
           {currentTab === 'jaringan' && (
-            <JaringanSection key="jaringan-tab" />
+            <JaringanSection key="jaringan-tab" branches={jaringan} />
           )}
 
           {/* 4. MAINSTREAM GERAKAN VIEW */}
           {currentTab === 'mainstream-gerakan' && (
-            <MainstreamGerakan key="gerakan-tab" />
+            <MainstreamGerakan key="gerakan-tab" pillars={pillars} />
           )}
 
           {/* 5. INDEKS SEARCH VIEW */}
@@ -308,11 +316,15 @@ export default function App() {
               pages={pages}
               messages={messages}
               campaigns={campaigns}
+              jaringan={jaringan}
+              pillars={pillars}
               onUpdateNews={setNews}
               onUpdateGallery={setGallery}
               onUpdatePages={setPages}
               onUpdateMessages={setMessages}
               onUpdateCampaigns={setCampaigns}
+              onUpdateJaringan={setJaringan}
+              onUpdatePillars={setPillars}
             />
           )}
         </AnimatePresence>

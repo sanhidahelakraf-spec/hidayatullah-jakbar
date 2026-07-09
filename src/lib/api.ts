@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, DonationRecord } from '../types';
+import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, DonationRecord, JaringanBranch, MainstreamPillar } from '../types';
 
 // ============ NEWS ============
 export async function getNews(): Promise<NewsItem[]> {
@@ -326,6 +326,95 @@ export async function incrementCampaignRaised(id: string, addAmount: number): Pr
 
 export async function deleteCampaign(id: string): Promise<void> {
   const { error } = await supabase.from('donation_campaigns').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ============ JARINGAN DAERAH ============
+export async function getJaringan(): Promise<JaringanBranch[]> {
+  const { data, error } = await supabase.from('jaringan').select('*').order('name', { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    address: row.address,
+    phone: row.phone,
+    type: row.type,
+  }));
+}
+
+export async function createJaringan(item: Omit<JaringanBranch, 'id'>): Promise<JaringanBranch> {
+  const { data, error } = await supabase.from('jaringan').insert(item).select().single();
+  if (error) throw error;
+  return { id: data.id, name: data.name, address: data.address, phone: data.phone, type: data.type };
+}
+
+export async function updateJaringan(item: JaringanBranch): Promise<void> {
+  const { error } = await supabase
+    .from('jaringan')
+    .update({ name: item.name, address: item.address, phone: item.phone, type: item.type })
+    .eq('id', item.id);
+  if (error) throw error;
+}
+
+export async function deleteJaringan(id: string): Promise<void> {
+  const { error } = await supabase.from('jaringan').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ============ MAINSTREAM GERAKAN (Pilar) ============
+export async function getMainstreamPillars(): Promise<MainstreamPillar[]> {
+  const { data, error } = await supabase.from('mainstream_pillars').select('*').order('sort_order', { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map(mapPillarRow);
+}
+
+function mapPillarRow(row: any): MainstreamPillar {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    details: row.details,
+    iconKey: row.icon_key,
+    colorFrom: row.color_from,
+    colorTo: row.color_to,
+  };
+}
+
+export async function createMainstreamPillar(item: Omit<MainstreamPillar, 'id'>, sortOrder: number): Promise<MainstreamPillar> {
+  const { data, error } = await supabase
+    .from('mainstream_pillars')
+    .insert({
+      title: item.title,
+      description: item.description,
+      details: item.details,
+      icon_key: item.iconKey,
+      color_from: item.colorFrom,
+      color_to: item.colorTo,
+      sort_order: sortOrder,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return mapPillarRow(data);
+}
+
+export async function updateMainstreamPillar(item: MainstreamPillar): Promise<void> {
+  const { error } = await supabase
+    .from('mainstream_pillars')
+    .update({
+      title: item.title,
+      description: item.description,
+      details: item.details,
+      icon_key: item.iconKey,
+      color_from: item.colorFrom,
+      color_to: item.colorTo,
+    })
+    .eq('id', item.id);
+  if (error) throw error;
+}
+
+export async function deleteMainstreamPillar(id: string): Promise<void> {
+  const { error } = await supabase.from('mainstream_pillars').delete().eq('id', id);
   if (error) throw error;
 }
 

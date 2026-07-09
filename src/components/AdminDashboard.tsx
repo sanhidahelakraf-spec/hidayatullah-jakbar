@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, BankAccount } from '../types';
+import { NewsItem, GalleryItem, PageContent, ContactMessage, DonationCampaign, BankAccount, JaringanBranch, MainstreamPillar, MainstreamIconKey } from '../types';
 import {
   createNews,
   updateNews,
@@ -13,6 +13,12 @@ import {
   createCampaign,
   updateCampaign,
   deleteCampaign,
+  createJaringan,
+  updateJaringan,
+  deleteJaringan,
+  createMainstreamPillar,
+  updateMainstreamPillar,
+  deleteMainstreamPillar,
 } from '../lib/api';
 import {
   Plus,
@@ -30,7 +36,16 @@ import {
   ExternalLink,
   Eye,
   Activity,
-  Heart
+  Heart,
+  MapPin,
+  Compass,
+  Award,
+  ShieldAlert,
+  Sparkles,
+  Star,
+  Building,
+  Globe,
+  Users
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -40,11 +55,15 @@ interface AdminDashboardProps {
   pages: PageContent[];
   messages: ContactMessage[];
   campaigns: DonationCampaign[];
+  jaringan: JaringanBranch[];
+  pillars: MainstreamPillar[];
   onUpdateNews: (updatedNews: NewsItem[]) => void;
   onUpdateGallery: (updatedGallery: GalleryItem[]) => void;
   onUpdatePages: (updatedPages: PageContent[]) => void;
   onUpdateMessages: (updatedMessages: ContactMessage[]) => void;
   onUpdateCampaigns: (updatedCampaigns: DonationCampaign[]) => void;
+  onUpdateJaringan: (updatedJaringan: JaringanBranch[]) => void;
+  onUpdatePillars: (updatedPillars: MainstreamPillar[]) => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -53,13 +72,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   pages,
   messages,
   campaigns,
+  jaringan,
+  pillars,
   onUpdateNews,
   onUpdateGallery,
   onUpdatePages,
   onUpdateMessages,
   onUpdateCampaigns,
+  onUpdateJaringan,
+  onUpdatePillars,
 }) => {
-  const [activeTab, setActiveTab] = useState<'news' | 'gallery' | 'pages' | 'messages' | 'donations'>('news');
+  const [activeTab, setActiveTab] = useState<'news' | 'gallery' | 'pages' | 'messages' | 'donations' | 'jaringan' | 'mainstream'>('news');
 
   // Article form state
   const [isArticleFormOpen, setIsArticleFormOpen] = useState(false);
@@ -96,6 +119,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     category: 'Sosial',
     bankAccounts: [],
   });
+
+  // Jaringan (branch) form state
+  const [isJaringanFormOpen, setIsJaringanFormOpen] = useState(false);
+  const [editingJaringanId, setEditingJaringanId] = useState<string | null>(null);
+  const [jaringanForm, setJaringanForm] = useState<Omit<JaringanBranch, 'id'>>({
+    name: '',
+    address: '',
+    phone: '',
+    type: '',
+  });
+
+  // Mainstream pillar form state
+  const [isPillarFormOpen, setIsPillarFormOpen] = useState(false);
+  const [editingPillarId, setEditingPillarId] = useState<string | null>(null);
+  const [pillarForm, setPillarForm] = useState<Omit<MainstreamPillar, 'id'>>({
+    title: '',
+    description: '',
+    details: '',
+    iconKey: 'sparkles',
+    colorFrom: '#065f46',
+    colorTo: '#022c22',
+  });
+
+  const ICON_OPTIONS: { key: MainstreamIconKey; label: string; icon: React.ReactNode }[] = [
+    { key: 'compass', label: 'Kompas', icon: <Compass className="w-4 h-4" /> },
+    { key: 'book-open', label: 'Buku', icon: <BookOpen className="w-4 h-4" /> },
+    { key: 'heart', label: 'Hati', icon: <Heart className="w-4 h-4" /> },
+    { key: 'users', label: 'Orang-orang', icon: <Users className="w-4 h-4" /> },
+    { key: 'award', label: 'Penghargaan', icon: <Award className="w-4 h-4" /> },
+    { key: 'shield-alert', label: 'Perisai', icon: <ShieldAlert className="w-4 h-4" /> },
+    { key: 'sparkles', label: 'Kilauan', icon: <Sparkles className="w-4 h-4" /> },
+    { key: 'star', label: 'Bintang', icon: <Star className="w-4 h-4" /> },
+    { key: 'building', label: 'Gedung', icon: <Building className="w-4 h-4" /> },
+    { key: 'globe', label: 'Dunia', icon: <Globe className="w-4 h-4" /> },
+  ];
 
   // Page editor state
   const [selectedPageId, setSelectedPageId] = useState<string>('sejarah-singkat');
@@ -395,6 +453,106 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  // ============ JARINGAN DAERAH — CRUD ============
+  const handleOpenNewJaringan = () => {
+    setEditingJaringanId(null);
+    setJaringanForm({ name: '', address: '', phone: '', type: '' });
+    setIsJaringanFormOpen(true);
+  };
+
+  const handleOpenEditJaringan = (branch: JaringanBranch) => {
+    setEditingJaringanId(branch.id);
+    setJaringanForm({ name: branch.name, address: branch.address, phone: branch.phone, type: branch.type });
+    setIsJaringanFormOpen(true);
+  };
+
+  const handleDeleteJaringan = async (id: string) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus data jaringan daerah ini?')) {
+      try {
+        await deleteJaringan(id);
+        onUpdateJaringan(jaringan.filter((j) => j.id !== id));
+      } catch (err) {
+        console.error(err);
+        alert('Gagal menghapus data jaringan. Silakan coba lagi.');
+      }
+    }
+  };
+
+  const handleSaveJaringan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingJaringanId) {
+        const updatedItem: JaringanBranch = { id: editingJaringanId, ...jaringanForm };
+        await updateJaringan(updatedItem);
+        onUpdateJaringan(jaringan.map((j) => (j.id === editingJaringanId ? updatedItem : j)));
+      } else {
+        const created = await createJaringan(jaringanForm);
+        onUpdateJaringan([...jaringan, created]);
+      }
+      setIsJaringanFormOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert('Gagal menyimpan data jaringan. Silakan coba lagi.');
+    }
+  };
+
+  // ============ MAINSTREAM GERAKAN — CRUD ============
+  const handleOpenNewPillar = () => {
+    setEditingPillarId(null);
+    setPillarForm({
+      title: '',
+      description: '',
+      details: '',
+      iconKey: 'sparkles',
+      colorFrom: '#065f46',
+      colorTo: '#022c22',
+    });
+    setIsPillarFormOpen(true);
+  };
+
+  const handleOpenEditPillar = (pillar: MainstreamPillar) => {
+    setEditingPillarId(pillar.id);
+    setPillarForm({
+      title: pillar.title,
+      description: pillar.description,
+      details: pillar.details,
+      iconKey: pillar.iconKey,
+      colorFrom: pillar.colorFrom,
+      colorTo: pillar.colorTo,
+    });
+    setIsPillarFormOpen(true);
+  };
+
+  const handleDeletePillar = async (id: string) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus pilar gerakan ini?')) {
+      try {
+        await deleteMainstreamPillar(id);
+        onUpdatePillars(pillars.filter((p) => p.id !== id));
+      } catch (err) {
+        console.error(err);
+        alert('Gagal menghapus pilar. Silakan coba lagi.');
+      }
+    }
+  };
+
+  const handleSavePillar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingPillarId) {
+        const updatedItem: MainstreamPillar = { id: editingPillarId, ...pillarForm };
+        await updateMainstreamPillar(updatedItem);
+        onUpdatePillars(pillars.map((p) => (p.id === editingPillarId ? updatedItem : p)));
+      } else {
+        const created = await createMainstreamPillar(pillarForm, pillars.length + 1);
+        onUpdatePillars([...pillars, created]);
+      }
+      setIsPillarFormOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert('Gagal menyimpan pilar. Silakan coba lagi.');
+    }
+  };
+
   return (
     <div className="my-8 bg-white border border-slate-100 rounded-2xl shadow-xl p-6 md:p-10 text-slate-800 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-5 mb-8">
@@ -411,7 +569,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         <div className="text-xs text-slate-400 font-extrabold uppercase tracking-widest mt-3 md:mt-0 bg-slate-50 border border-slate-200 py-1.5 px-3 rounded-lg flex items-center gap-2">
-          <Activity className="w-4 h-4 text-emerald-500" /> Status: <span className="text-emerald-600">Online & Terhubung</span>
+          <Activity className="w-4 h-4 text-emerald-500" /> Status: <span className="text-emerald-650">Online & Terhubung</span>
         </div>
       </div>
 
@@ -469,6 +627,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           }`}
         >
           <DollarSign className="w-4 h-4" /> Kampanye Donasi ({campaigns.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('jaringan')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-extrabold cursor-pointer transition-all ${
+            activeTab === 'jaringan'
+              ? 'bg-slate-950 text-white border border-slate-950 shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+          }`}
+        >
+          <MapPin className="w-4 h-4" /> Jaringan Daerah ({jaringan.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('mainstream')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-extrabold cursor-pointer transition-all ${
+            activeTab === 'mainstream'
+              ? 'bg-slate-950 text-white border border-slate-950 shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+          }`}
+        >
+          <Compass className="w-4 h-4" /> Mainstream Gerakan ({pillars.length})
         </button>
       </div>
 
@@ -575,7 +753,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
-                    <span className="absolute top-3 left-3 bg-emerald-800 text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
+                    <span className="absolute top-3 left-3 bg-emerald-850 text-white text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-wider">
                       {item.category}
                     </span>
                   </div>
@@ -872,7 +1050,128 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             })}
           </div>
         </div>
-      )}      {/* ARTICLE CREATE/EDIT FORM MODAL */}
+      )}
+
+      {/* Tab: JARINGAN DAERAH */}
+      {activeTab === 'jaringan' && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xs font-display font-black text-slate-800 uppercase tracking-wider">Manajemen Jaringan Daerah</h3>
+            <button
+              onClick={handleOpenNewJaringan}
+              className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer"
+            >
+              <Plus className="w-4 h-4" /> Tambah Jaringan Baru
+            </button>
+          </div>
+
+          {jaringan.length === 0 ? (
+            <div className="text-center py-16 text-slate-400 text-xs font-medium border border-dashed border-slate-200 rounded-2xl">
+              Belum ada data jaringan daerah. Klik "Tambah Jaringan Baru" untuk menambahkan.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {jaringan.map((branch) => (
+                <div
+                  key={branch.id}
+                  className="p-4 bg-slate-50/50 rounded-xl border border-slate-150 space-y-2.5"
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md">
+                      {branch.type}
+                    </span>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        onClick={() => handleOpenEditJaringan(branch)}
+                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
+                        title="Edit"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteJaringan(branch.id)}
+                        className="p-1.5 text-red-550 hover:bg-red-50 rounded transition-all cursor-pointer"
+                        title="Hapus"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  <h4 className="font-bold text-sm text-slate-800">{branch.name}</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    <MapPin className="w-3.5 h-3.5 inline mr-1 text-emerald-700" />
+                    {branch.address}
+                  </p>
+                  <p className="text-xs text-emerald-700 font-bold">{branch.phone}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab: MAINSTREAM GERAKAN */}
+      {activeTab === 'mainstream' && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xs font-display font-black text-slate-800 uppercase tracking-wider">Manajemen Pilar Mainstream Gerakan</h3>
+            <button
+              onClick={handleOpenNewPillar}
+              className="bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer"
+            >
+              <Plus className="w-4 h-4" /> Tambah Pilar Baru
+            </button>
+          </div>
+
+          {pillars.length === 0 ? (
+            <div className="text-center py-16 text-slate-400 text-xs font-medium border border-dashed border-slate-200 rounded-2xl">
+              Belum ada pilar gerakan. Klik "Tambah Pilar Baru" untuk menambahkan.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {pillars.map((pillar) => {
+                const iconOpt = ICON_OPTIONS.find((o) => o.key === pillar.iconKey);
+                return (
+                  <div
+                    key={pillar.id}
+                    className="p-4 bg-slate-50/50 rounded-xl border border-slate-150 space-y-2.5 flex flex-col"
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <div
+                        className="p-2.5 rounded-lg text-white shrink-0"
+                        style={{ background: `linear-gradient(to bottom right, ${pillar.colorFrom}, ${pillar.colorTo})` }}
+                      >
+                        {iconOpt?.icon ?? <Sparkles className="w-4 h-4" />}
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => handleOpenEditPillar(pillar)}
+                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
+                          title="Edit"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeletePillar(pillar.id)}
+                          className="p-1.5 text-red-550 hover:bg-red-50 rounded transition-all cursor-pointer"
+                          title="Hapus"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <h4 className="font-bold text-sm text-slate-800">{pillar.title}</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{pillar.description}</p>
+                    <p className="text-[10px] text-emerald-700 font-bold">{pillar.details}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ARTICLE CREATE/EDIT FORM MODAL */}
       {isArticleFormOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
           <div className="bg-white rounded-2xl p-6 md:p-8 max-w-2xl w-full shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto text-xs font-semibold text-slate-700 font-sans">
@@ -1256,6 +1555,221 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   className="bg-slate-950 hover:bg-slate-850 text-white font-bold py-2 px-5 rounded-lg shadow-xs cursor-pointer"
                 >
                   Simpan Kampanye
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* JARINGAN CREATE/EDIT FORM MODAL */}
+      {isJaringanFormOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto text-xs font-semibold text-slate-700 font-sans">
+            <form onSubmit={handleSaveJaringan} className="space-y-4">
+              <div className="border-b border-slate-100 pb-3">
+                <h3 className="text-base font-black text-slate-800 uppercase tracking-wider">
+                  {editingJaringanId ? 'Edit Data Jaringan Daerah' : 'Tambah Jaringan Daerah Baru'}
+                </h3>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Nama Pengurus Daerah</label>
+                <input
+                  type="text"
+                  value={jaringanForm.name}
+                  onChange={(e) => setJaringanForm({ ...jaringanForm, name: e.target.value })}
+                  placeholder="Contoh: PD Hidayatullah Kota Bandung"
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-bold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Jenis / Kategori</label>
+                <input
+                  type="text"
+                  value={jaringanForm.type}
+                  onChange={(e) => setJaringanForm({ ...jaringanForm, type: e.target.value })}
+                  placeholder="Contoh: Sekretariat DPD, Pondok Pesantren, dll."
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-bold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Alamat Lengkap</label>
+                <textarea
+                  rows={3}
+                  value={jaringanForm.address}
+                  onChange={(e) => setJaringanForm({ ...jaringanForm, address: e.target.value })}
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 resize-none font-medium text-xs"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Nomor Telepon</label>
+                <input
+                  type="text"
+                  value={jaringanForm.phone}
+                  onChange={(e) => setJaringanForm({ ...jaringanForm, phone: e.target.value })}
+                  placeholder="Contoh: 0812-3456-7890"
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-mono font-bold"
+                  required
+                />
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsJaringanFormOpen(false)}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="bg-slate-950 hover:bg-slate-850 text-white font-bold py-2 px-5 rounded-lg shadow-xs cursor-pointer"
+                >
+                  Simpan Data
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MAINSTREAM PILLAR CREATE/EDIT FORM MODAL */}
+      {isPillarFormOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto text-xs font-semibold text-slate-700 font-sans">
+            <form onSubmit={handleSavePillar} className="space-y-4">
+              <div className="border-b border-slate-100 pb-3">
+                <h3 className="text-base font-black text-slate-800 uppercase tracking-wider">
+                  {editingPillarId ? 'Edit Pilar Mainstream Gerakan' : 'Tambah Pilar Baru'}
+                </h3>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Judul Pilar</label>
+                <input
+                  type="text"
+                  value={pillarForm.title}
+                  onChange={(e) => setPillarForm({ ...pillarForm, title: e.target.value })}
+                  placeholder="Contoh: Dakwah & Rekrutmen Kader"
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-bold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Deskripsi</label>
+                <textarea
+                  rows={4}
+                  value={pillarForm.description}
+                  onChange={(e) => setPillarForm({ ...pillarForm, description: e.target.value })}
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 resize-none font-medium text-xs leading-relaxed"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Program Unggulan (Khidmat Nyata)</label>
+                <textarea
+                  rows={2}
+                  value={pillarForm.details}
+                  onChange={(e) => setPillarForm({ ...pillarForm, details: e.target.value })}
+                  placeholder="Contoh: Dai Sahabat Rakyat, Tebar Quran Pedalaman, dll."
+                  className="w-full bg-slate-50 rounded-lg p-2.5 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 resize-none font-medium text-xs"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Pilih Ikon</label>
+                <div className="grid grid-cols-5 gap-2">
+                  {ICON_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => setPillarForm({ ...pillarForm, iconKey: opt.key })}
+                      title={opt.label}
+                      className={`p-3 rounded-lg border flex items-center justify-center transition-all cursor-pointer ${
+                        pillarForm.iconKey === opt.key
+                          ? 'bg-slate-950 border-slate-950 text-white'
+                          : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
+                      }`}
+                    >
+                      {opt.icon}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-slate-700 font-bold">Warna Gradient Awal</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={pillarForm.colorFrom}
+                      onChange={(e) => setPillarForm({ ...pillarForm, colorFrom: e.target.value })}
+                      className="w-10 h-9 rounded border border-slate-200 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={pillarForm.colorFrom}
+                      onChange={(e) => setPillarForm({ ...pillarForm, colorFrom: e.target.value })}
+                      className="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-mono text-[10px]"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="block text-slate-700 font-bold">Warna Gradient Akhir</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={pillarForm.colorTo}
+                      onChange={(e) => setPillarForm({ ...pillarForm, colorTo: e.target.value })}
+                      className="w-10 h-9 rounded border border-slate-200 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={pillarForm.colorTo}
+                      onChange={(e) => setPillarForm({ ...pillarForm, colorTo: e.target.value })}
+                      className="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 font-mono text-[10px]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Preview */}
+              <div className="space-y-1.5">
+                <label className="block text-slate-700 font-bold">Preview</label>
+                <div
+                  className="p-4 rounded-lg flex items-center justify-center"
+                  style={{ background: `linear-gradient(to bottom right, ${pillarForm.colorFrom}, ${pillarForm.colorTo})` }}
+                >
+                  <div className="p-2.5 bg-white/15 rounded-xl text-white">
+                    {ICON_OPTIONS.find((o) => o.key === pillarForm.iconKey)?.icon}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsPillarFormOpen(false)}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="bg-slate-950 hover:bg-slate-850 text-white font-bold py-2 px-5 rounded-lg shadow-xs cursor-pointer"
+                >
+                  Simpan Pilar
                 </button>
               </div>
             </form>

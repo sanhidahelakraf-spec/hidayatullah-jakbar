@@ -29,7 +29,29 @@ export interface PageContent {
   lastUpdated: string;
 }
 
-export interface ContactMessage {
+export interface JaringanBranch {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  type: string;
+}
+
+// Daftar kunci ikon yang tersedia untuk dipilih admin (dipetakan ke komponen Lucide di frontend)
+export type MainstreamIconKey =
+  | 'compass' | 'book-open' | 'heart' | 'users'
+  | 'award' | 'shield-alert' | 'sparkles' | 'star'
+  | 'building' | 'globe';
+
+export interface MainstreamPillar {
+  id: string;
+  title: string;
+  description: string;
+  details: string;
+  iconKey: MainstreamIconKey;
+  colorFrom: string; // hex, contoh: "#065f46"
+  colorTo: string;   // hex, contoh: "#022c22"
+}
   id: string;
   name: string;
   email: string;

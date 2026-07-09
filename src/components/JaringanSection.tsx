@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Building, Star, Search } from 'lucide-react';
+import { JaringanBranch } from '../types';
 
-export const JaringanSection: React.FC = () => {
+interface JaringanSectionProps {
+  branches: JaringanBranch[];
+}
+
+export const JaringanSection: React.FC<JaringanSectionProps> = ({ branches }) => {
   const [filterQuery, setFilterQuery] = useState('');
-
-  const branches = [
-    { name: 'PD Hidayatullah Kota Bandung', address: 'Jl. Pesantren No. 123, Sukamiskin, Arcamanik, Bandung', phone: '0812-3456-7890', type: 'Sekretariat DPD' },
-    { name: 'PD Hidayatullah Kota Depok', address: 'Kawasan Ponpes Hidayatullah, Jl. Raya Kalimulya No. 80, Depok', phone: '021-7782134', type: 'Kampus Utama / Pondok Pesantren' },
-    { name: 'PD Hidayatullah Kabupaten Sumedang', address: 'Jl. Prabu Gajah Agung No. 44, Sumedang Utara', phone: '0852-8765-4321', type: 'Pondok Tahfizh & DPD' },
-    { name: 'PD Hidayatullah Kabupaten Bogor', address: 'Kecamatan Caringin, Kaki Gunung Gede Pangrango, Bogor', phone: '0813-1122-3344', type: 'Kampus Boarding School' },
-    { name: 'PD Hidayatullah Kota Bekasi', address: 'Perumahan Grand Galaksi, Blok A-12, Jakasetia, Bekasi Selatan', phone: '0811-9988-7766', type: 'Rumah Quran & DPD' },
-    { name: 'PD Hidayatullah Kabupaten Tasikmalaya', address: 'Jl. Ibrahim Singaparna, Tasikmalaya', phone: '0857-4455-6677', type: 'Pusat Dakwah & DPD' },
-    { name: 'PD Hidayatullah Kabupaten Garut', address: 'Jl. Patriot No. 18, Tarogong Kidul, Garut', phone: '0821-3322-1100', type: 'Pusat Layanan Sosial & DPD' },
-    { name: 'PD Hidayatullah Kota Cirebon', address: 'Jl. Kesambi No. 56, Kesambi, Kota Cirebon', phone: '0812-7766-5544', type: 'Daerah Binaan & DPD' },
-    { name: 'PD Hidayatullah Kabupaten Purwakarta', address: 'Jl. Veteran No. 9, Purwakarta', phone: '0878-5544-3322', type: 'Rumah Qur\'an & DPD' },
-  ];
 
   const filteredBranches = branches.filter(
     (b) =>
@@ -62,31 +55,15 @@ export const JaringanSection: React.FC = () => {
               Sebaran Wilayah
             </span>
             <h4 className="text-xl font-black font-display leading-tight">
-              Konsolidasi Jabar Bermartabat & Islami
+              Konsolidasi Jakbar Bermartabat & Islami
             </h4>
             <p className="text-xs text-slate-300 font-medium leading-relaxed">
-              Hidayatullah Jakarta Barat membawahi koordinasi dakwah di lebih dari 27 kabupaten dan kota, menggerakkan ratusan dai, lembaga sekolah integral, dan panti asuhan binaan.
-            </p>
+             Hidayatullah Jakarta Barat merupakan organisasi dakwah tingkat daerah yang berperan dalam mengembangkan kegiatan keislaman di wilayah Jakarta Barat. Dalam menjalankan perannya, Hidayatullah Jakarta Barat berfokus pada pembinaan umat melalui program pendidikan Al-Qur’an, khususnya melalui Rumah Qur’an dan TPQ. Kehadiran Rumah Qur’an dan TPQ ini menjadi sarana penting dalam membentuk generasi yang mencintai Al-Qur’an, memahami nilai-nilai Islam sejak dini, serta memiliki akhlak yang baik dalam kehidupan sehari-hari.
+</p>
           </div>
 
           <div className="space-y-4 pt-6 border-t border-slate-800 z-10">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-amber-400 font-black text-sm">
-                27
-              </div>
-              <span className="text-xs text-slate-200 font-bold">Pengurus Daerah DPD</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-amber-400 font-black text-sm">
-                45+
-              </div>
-              <span className="text-xs text-slate-200 font-bold">Sekolah & Pesantren Integral</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-amber-400 font-black text-sm">
-                120+
-              </div>
-              <span className="text-xs text-slate-200 font-bold">Rumah Qur'an Binaan</span>
             </div>
           </div>
         </div>
@@ -98,9 +75,9 @@ export const JaringanSection: React.FC = () => {
               Daerah yang Anda cari belum terdaftar atau silakan periksa ejaan.
             </div>
           ) : (
-            filteredBranches.map((branch, idx) => (
+            filteredBranches.map((branch) => (
               <div
-                key={idx}
+                key={branch.id}
                 className="p-5 bg-slate-50/50 hover:bg-emerald-50/10 rounded-2xl border border-slate-150 hover:border-emerald-200 transition-all flex flex-col justify-between space-y-4"
               >
                 <div>
