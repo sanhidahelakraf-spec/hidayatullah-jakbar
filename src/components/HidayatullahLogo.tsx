@@ -16,7 +16,7 @@ export const HidayatullahLogo: React.FC<HidayatullahLogoProps> = ({
       width={size}
       height={size}
       className={className}
-      style={{ objectFit: 'contain' }}
+      style={{ objectFit: 'contain' }}  
     />
   );
 };

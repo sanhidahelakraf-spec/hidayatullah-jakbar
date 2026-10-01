@@ -13,7 +13,7 @@ export const PagesContent: React.FC<PagesContentProps> = ({ page }) => {
   const getPageHeroImage = (id: string) => {
     switch (id) {
       case 'sejarah-singkat':
-        return 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80';
+        return 'https://id.images.search.yahoo.com/search/images;_ylt=A2RTrave8r1qHwMAXe7NQwx.;_ylu=Y29sbwNhcC1zb3V0aGVhc3QtMQRwb3MDOQR2dGlkAwRzZWMDc3I-?fr=mcafee&p=logo+hidayatullah&imgurl=https%3A%2F%2Fcdn.kibrispdr.org%2Fdata%2F751%2Flogo-hidayatullah-png-46.jpg';
       case 'visi-misi':
         return 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80';
       case 'pengurus':
